@@ -6,7 +6,7 @@ Version: 1.0
 
 Description:
 This program is a picture reconnaissance tkinter tool that uses collect_all_images to detect a face in an image.
-collect_all_image has 3 arguments: image_folder, reference_image, and output_folder and uses all three to do the magic.
+find_matching_faces() has 3 perimeters: image_folder, reference_image, and output_folder and uses all three to do the magic.
 The program uses the tkinter library for a GUI that allows the user to select an image file from their computer.
 There are 4 buttons in the GUI:
 1. Select Image: This button allows the user to select an image file from their computer that will be used for reference_image_path.
@@ -34,15 +34,31 @@ Copyright (C) 2025 Stephen Littman
 
 """
 
+import os
+import sys
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from collect_all_images import find_matching_faces
 from PIL import Image, ImageTk 
 
-# Constants
-THUMBNAIL_SIZE = (40, 40)  # Size for the thumbnail image
 
+# Constants
+THUMBNAIL_SIZE = (120, 120)  # Size for the thumbnail image
+DEFAULT_FONT = "TkDefaultFont 20 bold"  # Default font for text
+SELECTION_BUTTON_PAD = 20  # Padding for selection buttons
+LABEL_PAD = 10  # Padding for labels
+LABEL_FONT = "TkDefaultFont 12 bold"  # Font for labels
+
+def resource_path(relative_path):
+    # Get absolute path to resource, works for dev and for PyInstaller
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class PictureReconnaissanceApp:
@@ -68,40 +84,41 @@ class PictureReconnaissanceApp:
 
         # Create Widgets
         # Image label to display the selected image
-        self.image_path_label = tk.Label(self.master, textvariable=self.image_path, font = "TkDefaultFont 12")
-        self.image_path_label.pack(pady=1)
+        self.image_path_label = tk.Label(self.master, text=self.image_path, font = LABEL_FONT)
+        self.image_path_label.pack(pady=LABEL_PAD)
 
         # Buttons for selecting image
-        self.select_image_button = tk.Button(self.master, text="Select Image", font = "TkDefaultFont 20 bold", command=self.select_image)
-        self.select_image_button.pack(pady=30)
+        self.select_image_button = tk.Button(self.master, text="Select Image", font = DEFAULT_FONT, command=self.select_image)
+        self.select_image_button.pack(pady=SELECTION_BUTTON_PAD)
 
         # Label to display the image folder path
         self.image_folder_path = tk.StringVar()
-        self.image_folder_label = tk.Label(self.master, textvariable=self.image_folder, font = "TkDefaultFont 12")
-        self.image_folder_label.pack(pady=10)
+        self.image_folder_label = tk.Label(self.master, text=self.image_folder, font = LABEL_FONT)
+        self.image_folder_label.pack(pady=LABEL_PAD)
         
         # Button for selecting image folder path
-        self.select_folder_button = tk.Button(self.master, text="Select Folder", font = "TkDefaultFont 20 bold", command=self.select_folder)
-        self.select_folder_button.pack(pady=30)
+        self.select_folder_button = tk.Button(self.master, text="Select Folder", font = DEFAULT_FONT, command=self.select_folder)
+        self.select_folder_button.pack(pady=SELECTION_BUTTON_PAD)
 
         # Label to display the destination folder path
         self.destination_folder_path = tk.StringVar()
-        self.destination_folder_label = tk.Label(self.master, textvariable=self.destination_folder, font = "TkDefaultFont 12")
-        self.destination_folder_label.pack(pady=10)
+        self.destination_folder_label = tk.Label(self.master, text=self.destination_folder, font = LABEL_FONT)
+        self.destination_folder_label.pack(pady=LABEL_PAD)
 
         # Button for selecting destination folder path
-        self.select_destination_button = tk.Button(self.master, text="Select Output Folder", font = "TkDefaultFont 20 bold", command=self.select_destination_folder)
-        self.select_destination_button.pack(pady=30)
+        self.select_destination_button = tk.Button(self.master, text="Select Output Folder", font = DEFAULT_FONT, command=self.select_destination_folder)
+        self.select_destination_button.pack(pady=SELECTION_BUTTON_PAD)
 
         # Button for starting the face detection process
-        self.detect_faces_button = tk.Button(self.master, text="Detect Faces", font = "TkDefaultFont 20 bold", command=self.detect_faces)
-        self.detect_faces_button.pack(pady=30)
+        self.detect_faces_button = tk.Button(self.master, text="Detect Faces", font = DEFAULT_FONT, command=self.detect_faces)
+        self.detect_faces_button.pack(pady=LABEL_PAD)
 
     # Method for selecting an image file
     # This method opens a file dialog to select an image file and displays it in the GUI.
     # It also sets the image_path variable to the selected file path.
     def select_image(self):
         self.image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png")])
+        # print(f"Selected image: {self.image_path}")
         if self.image_path:
             self.display_image(self.image_path)
             print(f"Selected image: {self.image_path}")
@@ -116,9 +133,9 @@ class PictureReconnaissanceApp:
         image = Image.open(image_path)
         image.thumbnail(THUMBNAIL_SIZE)
         self.image = ImageTk.PhotoImage(image)
-        self.image_label.config(image=self.image)
-        self.image_label.image = self.image
-        self.image_label.pack(pady=20)
+        self.image_path_label.config(image=self.image)
+        self.image_path_label.image = self.image
+        self.image_path_label.pack(pady=20)
 
     # Method for selecting a folder of images
     # This method opens a file dialog to select a folder 
@@ -128,6 +145,7 @@ class PictureReconnaissanceApp:
         self.image_folder = filedialog.askdirectory()
         if self.image_folder:
             print(f"Selected folder: {self.image_folder}")
+            self.image_folder_label.config(text=self.image_folder)
         else:
             print("No folder selected.")
             messagebox.showerror("Error", "No folder selected.")
@@ -140,6 +158,7 @@ class PictureReconnaissanceApp:
         self.destination_folder = filedialog.askdirectory()
         if self.destination_folder:
             print(f"Selected output folder: {self.destination_folder}")
+            self.destination_folder_label.config(text=self.destination_folder)
         else:
             print("No output folder selected.")
             messagebox.showerror("Error", "No output folder selected.")
@@ -155,19 +174,19 @@ class PictureReconnaissanceApp:
 
         messagebox.showinfo("Processing", "Processing... Please wait.")
         try:
+            print(f"Processing images in {self.image_folder} with reference image {self.image_path} and output folder {self.destination_folder}")
             find_matching_faces(self.image_folder, self.image_path, self.destination_folder)
             messagebox.showinfo("Success", "Processing complete. Matching images copied to output folder.")
         except Exception as e:
+            print(f"Error: {e}")
             messagebox.showerror("Error", f"An error occurred: {e}")
         finally:
-            self.image_label.config(image="")
-            self.image_label.image = None
+            self.image_path_label.config(image="")
+            self.image_path_label.image = None
             self.image_path = ""
             self.image_folder = ""
             self.destination_folder = ""
             print("Resetting image, folder, and output folder.")
-            self.image_label.pack_forget()
-            self.image_label.pack(pady=20)
 
 
 # Main function to run the application
