@@ -20,7 +20,8 @@ To install dependencies, run:
 ```bash
 pip pip install -r requirements.txt
 ```
-Please see user manual.md for more information.
+**Please see user manual.md for more information.**
+
 ## 🚀 Usage Steps
 1️⃣ **Run the GUI application:**  
    ```bash

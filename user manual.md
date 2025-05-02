@@ -19,19 +19,19 @@ The **Picture Reconnaissance Tool** is designed to facilitate face detection and
 - It is recommended that before installing the dependencies you build and activate a Python virtual environment Python using the following commands:
 - Windows PowerShell
   ```bash
-  cd <into_the_directory_of_the_program>
+  cd <into\the\directory\of\the\program>
 
   python -m venv <environment_name>
 
-  <environment_name>/Scripts/activate
+  .\<environment_name>\Scripts\activate
   ```
 - Linux Terminal
   ```bash
-  cd <into_the_directory_of_the_program>
+  cd <into/the/directory/of/the/program>
 
   python -m venv <environment_name>
 
-  source <environment_name>/bin/activate 
+  source /<environment_name>/bin/activate 
   ```
 
 ### **Software Requirements**  
