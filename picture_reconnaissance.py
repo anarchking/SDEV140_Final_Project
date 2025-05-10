@@ -77,9 +77,11 @@ def resource_path(relative_path):
 class PictureReconnaissanceApp:
     # This is the main class for the Picture Reconnaissance application.
     def __init__(self, master):
-        self.master = master
+        self.master = master 
+
         # Set the icon for the main window
-        master.iconbitmap(resource_path(ICON))  
+        #self.master.iconbitmap(ICON)  
+
         # Set the title and size of the main window
         self.master.title("Picture Reconnaissance")
         self.master.geometry(f"{WIDTH}x{HEIGHT}")
@@ -177,7 +179,7 @@ class PictureReconnaissanceApp:
        
         self.about_author_label = tk.Label(self.about_frame, text="Author: Stephen Littman", font=LABEL_FONT)
         # Image of author
-        author_image = Image.open(AUTHOR)
+        author_image = Image.open(resource_path(AUTHOR))
         author_image.thumbnail(THUMBNAIL_SIZE)
         self.author_image = ImageTk.PhotoImage(author_image)
         self.author_label = tk.Label(self.about_frame, image=self.author_image, font=LABEL_FONT)
@@ -185,7 +187,7 @@ class PictureReconnaissanceApp:
         self.author_alt_text = tk.Label(self.about_frame, text="A picture of the author Stephen Littman.", font=ALT_FONT)
 
         # Image of logo
-        logo_image = Image.open(LOGO)
+        logo_image = Image.open(resource_path(LOGO))
         logo_image.thumbnail(THUMBNAIL_SIZE)
         self.logo_image = ImageTk.PhotoImage(logo_image)
         self.logo_label = tk.Label(self.about_frame, image=self.logo_image, font=LABEL_FONT)
